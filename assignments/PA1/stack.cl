@@ -115,56 +115,115 @@ numbers are handled correctly.
 
 };
 
-class Stack{
+class Stack inherits IO{
 stack:String<-"";
 tos : Int <-0;
-push(x:String){
-stack.concat(x);
+isNil():Bool{
+if tos = 0 then true else false fi
+};
+(*增加返回值*)
+push(x:String):Object{
+{
+stack <- stack.concat(x);
 tos <- tos+1;
 }
+};
 pop():String{
-stack.substr(0,tos-2);
-}
-
+--1
+--tos=1
+--12345 要想拿到5 substr(4,1)
+--tos=5 tos-1是栈顶元素
+--(tos-1,1)从tos-1开始即栈顶第一个 步长为1
+-- from index i with length l.
+let sc : String <- stack.substr(tos-1, 1) in {stack <- stack.substr(0,tos-1);tos <- tos -1; sc;}--tos是0则有一个元素，Sc是""//返回Sc
+-- stack.substr(0,tos-2);
+};
+top() :String{
+stack.substr(tos-1,1)
+};
 (*12345
 0,4
 tos is 5 *)
+display_stack():Object{
+--       out_string(stack)
+-- };
+   let len : Int <- stack.length() in{
+      while 0<len 
+      loop
+      {
+         out_string(stack.substr(len-1,1));--inherits IO 的作用在这
+         len <- len - 1;
+         out_string("\n");
+      }
+      pool;
+     }
 };
-
+};
 class Main inherits IO {
-
-   main() : Object {
-      stack := new Stack();
-      while (1)loop{
-input <- IO.in_string()
-if input = "x" then break else 
-if input = "d" then out_string(stack) else 
-if input = "e" then 
-if stack.substr(tos-1,tos-1) = "+" then 
-temp <- i2a(a2i(stack.substr(tos-2,tos-2))+a2i(stack.substr(tos-3,tos-3))) 
-stack.pop(tos-1)
-tos <-tos-1
-stack.pop(tos-1)
-tos <-tos-1
-stack.pop(tos-1)
-tos <-tos-1
-stack.concat(temp) tos <- tos+1 else 
-if "s" then 
-stack.pop(tos-1)
-tos <-tos-1
-temp1 <- stack.pop(tos-1)
-temp2 <- stack.pop(tos-2)
-stack.push(temp2)
-stack.push(temp1) else
-{ abort(); ""; }
-fi fi
-else 
-{abort();"";} 
-fi
-fi
-fi
+   display_promt():String{
+{
+   out_string(">");
+   in_string();
+}
    };
+   main() : Object {
+(let z : A2I <- new A2I  , stack : Stack <- new Stack in
+      -- stack := new Stack();
+while true loop
+(let input : String <- display_promt() in 
+--input <- IO.in_string()
+if input = "x" then abort() else 
+if input = "d" then 
+-- out_string(stack) 
+stack.display_stack()  else 
+if input = "e" then 
+{
+   if stack.isNil() then out_string("") else
+-- if stack.substr(tos-1,1) = "+" then 
 
-
-   }pool
+if stack.top()="+" then
+{
+-- stack.pop();
+-- temp <- i2a(a2i(stack.substr(tos-1,1))+a2i(stack.substr(tos-2,1))) 
+-- tos <-tos-1
+-- stack.pop()
+-- tos <-tos-1
+-- stack.pop()
+-- tos <-tos-1
+-- stack.concat(temp) tos <- tos+1 
+stack.pop();
+let a : Int <- new Int, b : Int <- new Int in 	
+{
+   a  <- z.a2i(stack.pop());
+   b  <- z.a2i(stack.pop());
+   a <- a + b;
+   stack.push(z.i2c(a));
+};
+}else if stack.top()="s" then {
+stack.pop();
+let temp1 : String <- new String , temp2 : String <- new String in
+{
+temp1 <- stack.pop();
+temp2 <- stack.pop();
+stack.push(temp1);
+stack.push(temp2);
+};
+}
+else
+-- { abort(); ""; }
+out_string("")
+fi 
+fi
+fi;
+}
+else 
+-- {abort();"";} 
+stack.push(input)
+fi
+fi
+fi
+)
+pool
+)
+};
 };
